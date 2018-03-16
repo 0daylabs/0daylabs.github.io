@@ -1,0 +1,12 @@
+---
+title: "RSA"
+permalink: /category-rsa/
+categoryName: rsa
+---
+
+<p>The following content is in the <b>{{page.categoryName}}</b> category:
+
+    {% for p in site.categories.rsa %}
+<h4 class="categoryArchive"><a href="{{ p.url | prepend: site.baseurl }}">{{p.title}}</a> <span class="postDate"> | {{ p.date | date: "%b %-d, %Y" }}</span>
+</h4>
+{% endfor %}

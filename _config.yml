@@ -1,0 +1,52 @@
+name: "Blog - 0daylabs"
+description: Security | Training | Testing
+host: 0.0.0.0
+port: 4000
+feedback_email: contact@0daylabs.com
+sidebar_accordion: true
+disqus_shortname: 0daylabs
+google_analytics: UA-67134587-1
+markdown: kramdown
+show_audience_label: true
+print: false
+paginate: 5
+timezone: America/Los_Angeles
+#highlighter: rouge
+gems:
+  - jekyll-sitemap
+  - jekyll-mentions
+  - jekyll-redirect-from
+
+url: https://blog.0daylabs.com
+enforce_ssl: blog.0daylabs.com
+exclude:
+  - _drafts
+  - .idea
+  - _site
+
+gems:
+  - jekyll-redirect-from
+
+# these are defaults that get applied to each page or post's frontmatter. leave as is.
+permalink: /:year/:month/:day/:title/
+defaults:
+  -
+    scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+      comments: true
+      search: true
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      comments: true
+      search: true
+
+sass:
+    sass_dir: _sass
+

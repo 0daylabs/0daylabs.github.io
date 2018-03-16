@@ -1,0 +1,18 @@
+---
+layout: none
+search: exclude
+---
+
+ {% for entry in site.data.sidebar_docapis.entries %}
+   {% for subcategory in entry.subcategories %}
+              {% for item in subcategory.items %}
+                    {{site.url}}{{site.baseurl}}{{item.url }}
+                          {% for thirdlevel in item.thirdlevel %}
+                                        {% for deeplevel in thirdlevel.thirdlevelitems %}
+                                              {{site.url}}{{site.baseurl}}{{item.url}}
+                                        {% endfor %}
+                          {% endfor %}
+             {% endfor %}
+   {% endfor %}
+ {% endfor %}
+

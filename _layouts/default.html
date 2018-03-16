@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+
+    {% include head.html %}
+
+    {% if page.video == true %}
+    <link href="https://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
+    <script src="https://vjs.zencdn.net/4.12/video.js"></script>
+    {% endif %}
+
+    {% if page.datatable == true %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.5/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.js"></script>
+    {% endif %}
+
+</head>
+
+<body>
+
+{% include topnav.html %}
+
+<!-- Page Content -->
+<div class="container">
+    <div class="col-lg-12">&nbsp;</div>
+
+
+    {% include sidebar.html %}
+
+    <!-- Content Column -->
+    <div class="col-md-9">
+
+        {{content}}
+        <div id="sidebarAreaHomePage">
+            <ul id="mytechsidebar" class="nav">
+                {% include social_media_icons.html %}
+                {% include sidebar_ads.html %}
+            </ul>
+        </div>
+
+    </div>
+    <!-- /.row -->
+
+    <hr>
+
+</div>
+<!-- /.container -->
+
+</div>
+</body>
+{% include google_analytics.html %}
+
+</html>
+

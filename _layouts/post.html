@@ -1,0 +1,42 @@
+---
+layout: default
+comments: true
+---
+<div id="topBannerImageHomepage">{% include topBannerAd.html %}</div>
+<h1>{{ page.title }}</h1>
+<p class="page-meta">
+{{ page.date | date: "%b %-d, %Y" }} &#8226;
+{% if page.categories %}
+{% for cat in page.categories %}
+<a href="{{ "/category-" | prepend: site.baseurl | append: {{cat}}">{{cat}}</a>{% unless forloop.last %}, {% endunless%}
+{% endfor %}
+{% endif %}
+
+{% if page.summary %}<div class="summary">{{page.summary}}</div> {% endif %}
+
+{% include toc.html %}
+
+{% include single_post_ads.html %}
+{{ content }}
+{% include social_sharing_buttons.html %}
+{% comment %} {% include googleads.html %}{% endcomment %}
+<!-- Look the author details up from the site config. -->
+{% assign author = site.data.authors[page.author] %}
+
+<!-- Output author details if some exist. -->
+{% if author %}
+<span>
+        <!-- Personal Info. -->
+        <img style="float:left;"src="https://www.gravatar.com/avatar/{{author.email_md5}}"/> <a href="{{ author.web }}" target="_blank"><h4 style="float:left;padding:15px 0px 0px 20px" class="section-title author-name">{{author.name}}</h4></a>
+        <p style="float:left;width:595px;padding:0px 0px 0px 25px;margin:0px" class="author-bio">{{author.bio}}</p>
+</span>
+
+{% endif %}
+
+
+{% include disqus.html %}
+
+
+
+
+

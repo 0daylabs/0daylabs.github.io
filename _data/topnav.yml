@@ -1,0 +1,47 @@
+# Topnav single links
+# if you want to list an external url, use external_url instead of url. the theme will apply a different link base.
+#    - title: Jobs
+#      url: /findjobs/
+
+#Topnav dropdowns
+
+topnav:
+- title: Topnav
+  subcategories:
+    - title: Bug Bounty
+      url: /category-bugbounty
+    - title: Kali-Linux
+      url: /category-kali-linux
+    - title: Python
+      url: /category-python
+    - title: About US
+      url: https://0daylabs.com/
+    - title: Contact
+      url: https://0daylabs.com/contact/
+
+topnav_dropdowns:
+- title: Topnav dropdowns
+  subcategories:
+    - title: Web Security
+      items:
+
+      - title: XSS challenges
+        url: /category-xss/
+
+      - title: 0ldzombie challenges
+        url: /category-0ldzombie/
+
+      - title: JavaScript for Pentesters
+        url: /category-jsp/
+
+    - title: Cryptanalysis
+      items:
+
+      - title: RSA
+        url: /category-rsa/
+
+    - title: Tutorials
+      items:
+
+      - title: Linux
+        url: /category-linux/

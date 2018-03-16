@@ -1,0 +1,31 @@
+---
+author: Author name without space  (if you are a new author, add your info to _data/authors.yml in the exact format written there)
+layout: post  (this value is always the same)
+title: 'Title of the article you are gonna write (enclosed in quotes) '
+categories:   (name of the category for which article is written. Make sure specified category is added in 'pages/category-archives'. Add new one there if not already present.
+- category1
+- category2
+summary:  Summary of the article that you are going to write.
+---
+
+
+Write your article here
+
+{% highlight python lineos %}
+
+   Put the bash code block inside this. If you want to publish other type of codes, rename python with the language. eg: c, html, bash, PHP
+
+{%endhighlight%}
+
+To highlight important words, put the word inside 2 backticks:
+
+`this is a highlighted sentence`  <- small codes 1 - 2 lines can be added like this.
+
+Adding a list of points:
+
+ * This is the first point
+ * THis is the 2nd point
+
+This is a **bold** word.
+
+![Airomon in action](/images/2014/Airomon.jpg)    //this is how an image is added
