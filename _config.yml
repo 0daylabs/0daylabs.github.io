@@ -9,7 +9,7 @@ google_analytics: UA-67134587-1
 markdown: kramdown
 show_audience_label: true
 print: false
-paginate: 5
+paginate: 8
 timezone: America/Los_Angeles
 #highlighter: rouge
 gems:
