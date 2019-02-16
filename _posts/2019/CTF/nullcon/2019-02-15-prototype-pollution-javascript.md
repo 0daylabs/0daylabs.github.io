@@ -6,7 +6,7 @@ categories:
 - ctf
 summary: Prototype Pollution attacks on NodeJs is a recent research by Olivier Arteau where he discovered how to exploit an application if we can pollute the prototype of a base object.
 description: Prototype Pollution attacks on NodeJs is a recent research by Olivier Arteau where he discovered how to exploit an application if we can pollute the prototype of a base object.
---
+---
 
 ## Introduction
 
