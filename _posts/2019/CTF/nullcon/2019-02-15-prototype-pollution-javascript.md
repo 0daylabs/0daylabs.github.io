@@ -10,7 +10,7 @@ description: Prototype Pollution attacks on NodeJs is a recent research by Olivi
 
 ## Introduction
 
-Prototype Pollution attacks, as the name suggests, is about polluting the prototype of a base object which can sometimes lead to RCE. This is a fantastic research done by Olivier Arteau and has given a talk on [NorthSec 2018](https://www.youtube.com/watch?v=LUsiFV3dsK8). Let's look at the vulnerability in a bit more indepth with an example from Nullcon HackIm 2019 challenge named `proton`:
+Prototype Pollution attacks, as the name suggests, is about polluting the prototype of a base object which can sometimes lead to RCE. This is a fantastic research done by Olivier Arteau and has given a talk on [NorthSec 2018](https://www.youtube.com/watch?v=LUsiFV3dsK8). Let's take a look at the vulnerability in-depth with an example from Nullcon HackIm 2019 challenge named `proton`:
 
 
 ## Objects in javaScript
@@ -34,7 +34,7 @@ console.log(obj);  // prints the entire object along with all of its properties.
 
 In the above example, `name` and `website` are the properties of the object `obj`. If you carefully look at the last statement, the `console.log` prints out a lot more information than the properties we explicitly defined. Where are these properties coming from ?
 
-`Object` is the fundamental basic object upon which all other objects are created. We can create an empty object (without any properties) by passing the argument `null` while object creation but by default it creates an object of a type that corresponds to its value and inherit all the properties to the newly created object (unless its `null`).
+`Object` is the fundamental basic object upon which all other objects are created. We can create an empty object (without any properties) by passing the argument `null` during object creation, but by default it creates an object of a type that corresponds to its value and inherits all the properties to the newly created object (unless its `null`).
 
 {% highlight javascript lineos %}
 
@@ -47,7 +47,7 @@ console.log(Object.create(null)); // prints an empty object
 ## Functions/Classes in javaScript?
 
 
-In javaScript, the concepts of classes and functions are relative (functions itself serves as the constructor for the class and there is no explicit "classes" itself). Let's take an example:
+In javaScript, the concept of classes and functions are relative (functions itself serves as the constructor for the class and there is no explicit "classes" itself). Let's take an example:
 
 {% highlight javascript lineos %}
 
@@ -120,9 +120,9 @@ In the above example, we defined a function named `person` and we created 2 obje
 
 
 
-## WTF is a constructor ?
+## WTH is a constructor ?
 
-`Constructor` is a magic property which returns the function that used to create the object. The prototype object has a constructor which points to the function itself and the constructor of the constructor is the global function constructor.
+`Constructor` is a magical property which returns the function that used to create the object. The prototype object has a constructor which points to the function itself and the constructor of the constructor is the global function constructor.
 
 
 {% highlight javascript lineos %}
@@ -149,7 +149,7 @@ person3.constructor.constructor("return 1")();   // returns 1
 
 ## Prototypes in javaScript
 
-One of the things to note here is that prototype property can be modified at run time to add/delete/edit entries. For example:
+One of the things to note here is that the prototype property can be modified at run time to add/delete/edit entries. For example:
 
 {% highlight javascript lineos %}
 function person(fullName, age) {
@@ -190,15 +190,15 @@ console.log(person2.details()); // prints "Anand has age: 45" :O
 {%endhighlight%}
 
 
-Noticied anything suspicious?  We modified `person1` object but why `person2` also got affected? The reason being that in the first example, we directly modified `person.prototype` to add a new property but in the 2nd example we did exactly the same but using object. We have already seen that constructor returns the function using which the object is created so `person1.constructor` points to the function `person` itself and `person1.constructor.prototype` is same as `person.prototype`.
+Noticied anything suspicious?  We modified `person1` object but why `person2` also got affected? The reason being that in the first example, we directly modified `person.prototype` to add a new property but in the 2nd example we did exactly the same but by using object. We have already seen that constructor returns the function using which the object is created so `person1.constructor` points to the function `person` itself and `person1.constructor.prototype` is the same as `person.prototype`.
 
 
 
 ## Prototype Pollution
 
-Let's take an example, `obj[a][b] = value`. If an attacker can control `a` and `value`, then he can set the value of a to `__proto__` and the property `b` will be defined for all existing object of the application with the value `value`.
+Let's take an example, `obj[a][b] = value`. If an attacker can control `a` and `value`, then he can set the value of a to `__proto__` and the property `b` will be defined for all existing objects of the application with the value `value`.
 
-Now the attack is not as simple as it feels like from the above statement. According to the [research paper](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf), this can be exploitable only if any of the following 3 is happening:
+The attack is not as simple as it feels like from the above statement. According to the [research paper](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf), this is exploitable only if any of the following 3 happens:
 
 1. Object recursive merge
 2. Property definition by path
@@ -289,13 +289,13 @@ curl -vv --header 'Content-type: application/json' -d '{"__proto__": {"admin": 1
 
 ## Merge() - Why was it vulnerable?
 
-One obvious question here is what makes the `merge()` function vulnerable here? Here is how it works and what makes it vulnerable:
+One obvious question here is, what makes the `merge()` function vulnerable here? Here is how it works and what makes it vulnerable:
 
 * The function starts with iterating all properties that is present on the 2nd object `b` (since 2nd is given preference incase of same key-value pairs).
 * If the property exists on both first and second arguments and they are both of type `Object`, then it recusively starts to merge it.
 * Now if we can control the value of b[attr] to make *attr* as `__proto__` and also if we can control the value inside the proto property in *b*, then while recursion, `a[attr]` at some point will actually point to prototype of the object *a* and we can successfully add a new property to all the objects.
 
-Still confused ? Well I don't blame because it took sometime for myself to understand the concept. let's write some debug statements to figure out whats happening.
+Still confused ? Well I don't blame, because it took sometime for me also to understand the concept. Let's write some debug statements to figure out what is happening.
 
 {% highlight javascript lineos %}
 const isObject = obj => obj && obj.constructor && obj.constructor === Object;
@@ -318,9 +318,9 @@ function clone(a) {
 }
 {%endhighlight%}
 
-Now let's try sending the curl request mentioned above. What we can notice is, the object *b* now has the value: `{ __proto__: { admin: 1 } }` where `__proto__` is just a property name and is not actually pointing to function prototype. Now during the function merge(), `for (var attr in b)` iterates through every attribute where the first attribute name now is `__proto__`.
+Now let's try sending the curl request mentioned above. What we can notice is that the object *b* now has the value: `{ __proto__: { admin: 1 } }` where `__proto__` is just a property name and is not actually pointing to function prototype. Now during the function merge(), `for (var attr in b)` iterates through every attribute where the first attribute name now is `__proto__`.
 
-Since its always of type object, it starts to recursively call, this time as `merge(a[__proto__], b[__proto__])`. This essentially helped us in getting access to function prototype of `a` and add new properties which is defined in the proto property of `b`.
+Since it's always of type object, it starts to recursively call, this time as `merge(a[__proto__], b[__proto__])`. This essentially helped us in getting access to function prototype of `a` and add new properties which is defined in the proto property of `b`.
 
 
 ## References
