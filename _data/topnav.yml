@@ -8,8 +8,8 @@
 topnav:
 - title: Topnav
   subcategories:
-    - title: Bug Bounty
-      url: /category-bugbounty
+    - title: Android
+      url: /category-android/
     - title: Kali-Linux
       url: /category-kali-linux
     - title: Python
