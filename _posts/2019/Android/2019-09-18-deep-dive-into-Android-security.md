@@ -1,20 +1,20 @@
 ---
 author: AnirudhAnand
 layout: post
-title: Deep dive into Android security - OWASP MSTG Uncrackable level 1 writeup
+title: Dive deep into Android Application Security - OWASP MSTG Uncrackable level 1 writeup
 categories:
 - android
 - xss
-summary: Uncrackable Apps for Android is a collection of mobile reversing challenges maintained by the OWASP MSTG (Mobile Security Testing Guide) authors. Cracking and solving these challenges is a fun way to learn Android security. Here, in this writeup, we will deep dive into Android and use several different ways to solve the same problem !
-description: Uncrackable Apps for Android is a collection of mobile reversing challenges maintained by the OWASP MSTG (Mobile Security Testing Guide) authors. Cracking and solving these challenges is a fun way to learn Android security. Here, in this writeup, we will deep dive into Android and use several different ways to solve the same problem !
+Summary: Uncrackable Apps for Android is a collection of mobile reversing challenges maintained by the OWASP MSTG (Mobile Security Testing Guide) authors. Cracking and solving these challenges is a fun way to learn Android security. Here, in this writeup, we will dive deep into Android and use several different ways to solve the same problem !
+Description: Uncrackable Apps for Android is a collection of mobile reversing challenges maintained by the OWASP MSTG (Mobile Security Testing Guide) authors. Cracking and solving these challenges is a fun way to learn Android security. Here, in this writeup, we will dive deep into Android and use several different ways to solve the same problem !
 ---
 
 ## Introduction
 
-Android is the most popular mobile operating system with over 85% in market share and as a result its important to look into the security aspects of the same as well. [Mobile Security Testing Guide](https://github.com/OWASP/owasp-mstg/){:target="_blank"} (MSTG) is one of the Flagship OWASP project which is a comprehensive manual for mobile app security development, testing and reverse engineering. The authors of MSTG has created some crackme's for both Android and iOS platform using which we can learn dive deep into the application security of the respective platforms. In this article, we will focus on solving [uncrackable level 1](https://github.com/OWASP/owasp-mstg/raw/master/Crackmes/Android/Level_01/UnCrackable-Level1.apk){:target="_blank"} for Android.
+Android is the most popular mobile operating system with over 85% in market share and as a result it’s important to look into the security aspects of the same as well. [Mobile Security Testing Guide](https://github.com/OWASP/owasp-mstg/){:target="_blank"} (MSTG) is one of the Flagship OWASP project which is a comprehensive manual for mobile app security development, testing and reverse engineering. The authors of MSTG have created some crackme's for both Android and iOS platform using which we can dive deep into the application security of the respective platforms. In this article, we will focus on solving [uncrackable level 1](https://github.com/OWASP/owasp-mstg/raw/master/Crackmes/Android/Level_01/UnCrackable-Level1.apk){:target="_blank"} for Android.
 
 
-Let's try to install the APK in an emulator and see how it works. I am using genymotion personal license with Google Nexus 5 (6.0 - API 23) device.
+Let's install the APK in an emulator and see how it works. I am using genymotion personal license with Google Nexus 5 (6.0 - API 23) device.
 
 {% highlight bash lineos %}
 [anirudhanand@Android]$ adb devices
@@ -28,7 +28,7 @@ UnCrackable-Level1.apk: 1 file pushed. 22.7 MB/s (66651 bytes in 0.003s)
 Success
 {%endhighlight%}
 
-If we try to run the application, it detects we have root access to the device and exit immediately. Root detection is one the common techniques developers use to prevent installing their applications on the rooted device. Let's decompile the APK and look into the source code to see if we can bypass this.
+If we run the application, it detects the root access to the device and exit immediately. Root detection is one of the common techniques developers use to prevent installing their applications on the rooted device. Let's decompile the APK and look into the source code to see if we can bypass this.
 
 
 ## Decompiling into Java Source code
@@ -96,7 +96,7 @@ On line number 12, 13 there are 2 imports which is nothing but importing from th
 
 Both b.java and c.java files are being imported to the `MainActivity.java` file. The program has 2 protections inbuilt:
 
-1. Root Detection:
+* Root Detection:
 
 This checks if the app has been installed on a rooted device and if so, exit immediately. The function is called within `onCreate` but it's defined in c.java file:
 
@@ -135,14 +135,14 @@ This checks if the app has been installed on a rooted device and if so, exit imm
 
 So for Root detection, they are doing 3 tests to confirm if the device is rooted or not:
 
-* Su Binary: The function checks if SU binary exists or not. If so, they consider the device as rooted.
-* test-keys: During the release of kernel, keys are being used to sign it which is either `release-keys` or `test-keys`. If its latter, it means the kernel was signed with a custom key generated by a 3rd party developer. This is an indication that device might be rooted.
-* /system/ : These are common files/binaries which is accessible in a rooted device which is other wise not accessible (on non rooted device).
+1. Su Binary: The function checks if SU binary exists or not. If so, the device as rooted.
+2. test-keys: During the release of kernel, keys are being used to sign it which is either `release-keys` or `test-keys`. If it's the latter, it means the kernel was signed with a custom key generated by a 3rd party developer. This is an indication that the device might be rooted (This info is located in the file `/system/build.prop`).
+3. /system/ : These are common files/binaries which is accessible in a rooted device which is otherwise not accessible (on a non rooted device).
 
 
-2. Debuggable App:
+* Debuggable App:
 
-By modifying the `AndroidManifest.xml`, app can be debuggable so at the run time we can connect into the app using JDB (java debugger) and modify its behaviour. In order to prevent this, there is a check to see if the app debuggable and if so, system will exit.
+By modifying the `AndroidManifest.xml`, app can be debuggable so at the run time we can connect into the app using JDB (java debugger) and modify its behaviour. In order to prevent this, a check is implemented to see if the app is debuggable and if so, the system will exit.
 
 
 Now let's look at the `verify` function where the secret is being verified.
@@ -242,13 +242,13 @@ There are multiple ways in which we can solve the challenge:
 
 Let's look into some of the above techniques:
 
-## Defeating root checking with Repackaging
+## Bypassing root detection with Repackaging
 
-One of the ways to solve this challenge is to decompile the app with apktool, modify the smali byte code and reinstall the app to control the function flow. Root detections can be bypassed in several ways:
+One of the ways to solve this challenge is to decompile the app with apktool, modify the smali byte code and reinstall the app to control the function flow. Using this technique, Root detections can be bypassed in several ways:
 
 1. Modify the return of each of the functions inside class `c` to always return false whether they have detected root or not.
 
-2. Modify the function `onClick` inside the MainActivity.java to return void instead of calling `system.exit` so that even through root is detected,  the app won't exit.
+2. Modify the function `onClick` inside the MainActivity.java to return void instead of calling `system.exit` so that even through root is detected, the app won't exit.
 
 
 Let's use the latter (2) to evade the root detection:
@@ -327,12 +327,12 @@ I: Built apk...
 
 {%endhighlight%}
 
-Let's run the newly installed APK and we can see that clicking on "ok" won't exit the application now. Essentially what we did here is to modify the function call "onClick" and we removed the `system.exit()` function invocation line: `invoke-static {p1}, Ljava/lang/System;->exit(I)V`. Then we recomplied, signed (using [sign.jar](https://github.com/appium/sign){:target="_blank"}) and reinstalled the application to bypass this check.
+Let's run the newly installed APK and we can see that clicking on "ok" won't exit the application. Essentially what we did here was to modify the function call "onClick" and we removed the `system.exit()` function invocation line: `invoke-static {p1}, Ljava/lang/System;->exit(I)V`. Then we recomplied, signed (using [sign.jar](https://github.com/appium/sign){:target="_blank"}) and reinstalled the application to bypass this check.
 
 
 ## Leaking the secret with runtime instrumentation - Frida
 
-Frida is a dynamic runtime instrumentation toolkit using which we can hook functions, spy on crypto APIs or trace private application code on runtime. In short, using frida, we can redefine functions, leak function variables and what not ? In order to run Frida, make sure to install frida server on your rooted device and it's running in the background as root (Frida - Instal[Client](https://www.frida.re/docs/installation/){:target="_blank"} and [Server](https://www.frida.re/docs/android/){:target="_blank"}). Once the server is running, we can write our own script to leak the secret out of the APK during run time.
+Frida is a dynamic runtime instrumentation toolkit using which we can hook functions, spy on crypto APIs or trace private application code on runtime. In short, using frida, we can redefine functions, leak function variables and what not ? In order to run Frida, make sure to install frida server on your rooted device and it's running in the background as root (Frida - Install [Client](https://www.frida.re/docs/installation/){:target="_blank"} and [Server](https://www.frida.re/docs/android/){:target="_blank"}). Once the server is running, we can write our own script to leak the secret out of the APK during run time.
 
 A sample frida script (modifying function implementation) will look like this:
 
@@ -349,7 +349,7 @@ Java.perform(function () {
 });
 {%endhighlight%}
 
-In very simple terms, we can write javaScript code to tell frida to use a class and hook it's conrresponding functions and reimplement it. In the above example, we hooked a function named `function_name` from a class and rewrote its implememtation to make sure function always returns false during runtime.
+In very simple terms, we can write JavaScript code to tell frida to use a class and hook its corresponding functions and reimplement it. In the above example, we hooked a function named `function_name` from a class and rewrote its implementation to make sure function always returns false during runtime.
 
 
 From the initial source code analysis, we know the decryption of the encrypted string is happening inside `sg/vantagepoint/a/a.java` where the return of the function `a()` has our secret. So using Frida, we can do the following to solve the challenge:
@@ -383,7 +383,11 @@ Java.perform(function () {
 });
 {%endhighlight%}
 
-Run the above exploit (exploit.js) using Frida: `frida -U -f owasp.mstg.uncrackable1 -l exploit.js --no-pause`. Once you run it, the program will be launched inside the emulator. Give some random input so that the function gets invoked atleast once and look back in the Frida terminal to see the leaked secret.
+Run the above exploit (exploit.js) using Frida: `frida -U -f owasp.mstg.uncrackable1 -l exploit.js --no-pause`. Once you run it, the program will be launched inside the emulator. Give some random input so that the function gets invoked at least once and look back in the Frida terminal to see the leaked secret.
 
 ## References
+
+1. Frida: https://frida.re
+
+2. Eduardo Novella's solution to uncrackable level 1 (completely using Frida): https://enovella.github.io/android/reverse/2017/05/18/android-owasp-crackmes-level-1.html
 
