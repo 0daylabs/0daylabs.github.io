@@ -4,8 +4,8 @@ layout: post
 title: Dive deep into Android Application Security - OWASP MSTG Uncrackable level 1 writeup
 categories:
 - android
-summary: Uncrackable Apps for Android is a collection of mobile reversing challenges maintained by the OWASP MSTG (Mobile Security Testing Guide) authors. Cracking and solving these challenges is a fun way to learn Android security. Here, in this writeup, we will dive deep into Android and use several different ways to solve the same problem !
-description: Uncrackable Apps for Android is a collection of mobile reversing challenges maintained by the OWASP MSTG (Mobile Security Testing Guide) authors. Cracking and solving these challenges is a fun way to learn Android security. Here, in this writeup, we will dive deep into Android and use several different ways to solve the same problem !
+summary: Uncrackable Apps for Android is a collection of mobile reversing challenges maintained by the OWASP MSTG (Mobile Security Testing Guide) authors. Cracking and solving these challenges is a fun way to learn Android security.
+description: Uncrackable Apps for Android is a collection of mobile reversing challenges maintained by the OWASP MSTG (Mobile Security Testing Guide) authors. Cracking and solving these challenges is a fun way to learn Android security.
 ---
 
 ## Introduction
