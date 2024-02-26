@@ -244,14 +244,13 @@ Let's explore the `ofbiz-component.xml` file:
 
 **File**: *ofbiz-framework-release18.12.05/framework/webtools/ofbiz-component.xml*
 {% highlight xml lineos %}
-   30:     <webapp name="webtools"
-   31:         title="WebTools"
-   32:         position="12"
-   33:         server="default-server"
-   34:         location="webapp/webtools"
-   35:         base-permission="OFBTOOLS,WEBTOOLS"
-   36:         mount-point="/webtools"/>
-
+30:     <webapp name="webtools"
+31:         title="WebTools"
+32:         position="12"
+33:         server="default-server"
+34:         location="webapp/webtools"
+35:         base-permission="OFBTOOLS,WEBTOOLS"
+36:         mount-point="/webtools"/>
 {%endhighlight%}
 
 So we can conclude that the mount-point to access the framework's webtools directory is to hit `/webtools`. 
@@ -262,17 +261,17 @@ Let's explore the `web.xml` file, specifically the control servlet mapping:
 
 **File**: *ofbiz-framework-release18.12.05/framework/webtools/webapp/webtools/WEB-INF/web.xml*
 {% highlight xml lineos %}
-  102:     <servlet>
-  103:         <description>Main Control Servlet</description>
-  104:         <display-name>ControlServlet</display-name>
-  105:         <servlet-name>ControlServlet</servlet-name>
-  106:         <servlet-class>org.apache.ofbiz.webapp.control.ControlServlet</servlet-class>
-  107:         <load-on-startup>1</load-on-startup>
-  108:     </servlet>
-  109:     <servlet-mapping>
-  110:         <servlet-name>ControlServlet</servlet-name>
-  111:         <url-pattern>/control/*</url-pattern>
-  112:     </servlet-mapping>
+102:     <servlet>
+103:         <description>Main Control Servlet</description>
+104:         <display-name>ControlServlet</display-name>
+105:         <servlet-name>ControlServlet</servlet-name>
+106:         <servlet-class>org.apache.ofbiz.webapp.control.ControlServlet</servlet-class>
+107:         <load-on-startup>1</load-on-startup>
+108:     </servlet>
+109:     <servlet-mapping>
+110:         <servlet-name>ControlServlet</servlet-name>
+111:         <url-pattern>/control/*</url-pattern>
+112:     </servlet-mapping>
 {%endhighlight%}
 
 * `servlet-name` specifies a name for the servlet, in this case, `ControlServlet`
@@ -287,12 +286,20 @@ Let's explore the `controller.xml` file:
 
 **File**: *ofbiz-framework-release18.12.05/framework/webtools/webapp/webtools/WEB-INF/controller.xml*
 {% highlight xml lineos %}
-   65:     <request-map uri="ping">
-   66:         <security auth="true"/>
-   67:         <event type="service" invoke="ping"/>
-   68:         <response name="error" type="view" value="ping"/>
-   69:         <response name="success" type="view" value="ping"/>
-   70:     </request-map>
+65:     <request-map uri="ping">
+66:         <security auth="true"/>
+67:         <event type="service" invoke="ping"/>
+68:         <response name="error" type="view" value="ping"/>
+69:         <response name="success" type="view" value="ping"/>
+70:     </request-map>
+.
+.
+419:     <request-map uri="ProgramExport">
+420:         <security https="true" auth="true"/>
+421:         <response name="success" type="view" value="ProgramExport"/>
+422:         <response name="error" type="view" value="ProgramExport"/>
+423:     </request-map>
+
 {%endhighlight%}
 
 From the above file, 
