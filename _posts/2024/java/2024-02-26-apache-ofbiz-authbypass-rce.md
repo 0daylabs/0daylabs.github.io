@@ -18,7 +18,7 @@ Download the [18.12.05](https://github.com/apache/ofbiz-framework/releases/tag/r
 
 <div align='center'><img src="/images/2024/apache_ofbiz_directories.png" alt="Apache OFBiz Directories" height="450"/></div>
 
-Exploring through the directories we can see the `docs` directory which usually contain interesting information including details on project structure, architecture/design and the developer manual. This is instrumental in gaining a good understanding of the core framework. Notably, within the 'docs' directory, the `developer-manual.adoc` file contains great insights into the project's structure
+Exploring through the directories we can see the `docs` directory which usually contains interesting information including details on project structure, architecture/design and the developer manual. This is instrumental in gaining a good understanding of the core framework. Notably, within the 'docs' directory, the `developer-manual.adoc` file contains great insights into the project's structure
 
 The base directory structure of Apache OFBiz is organized as follows:
 
@@ -140,12 +140,12 @@ Ex: `http://localhost:8443/something?USERNAME&PASSWORD`
 
 5. If any of the required credentials (username, password, or token) is equal to `null` or if the login method returns an `error` status, the code performs the following actions:
 	1. Removes an attribute (*_LOGIN_PASSED_*) and sets the *_PREVIOUS_REQUEST_* attribute in the session, storing the path of the request.
-	3. Stores URL parameters and form parameters in separate maps (*_PREVIOUS_PARAM_MAP_URL_* and *_PREVIOUS_PARAM_MAP_FORM_*) in the session.
-	4. Returns the string `error`.
+	2. Stores URL parameters and form parameters in separate maps (*_PREVIOUS_PARAM_MAP_URL_* and *_PREVIOUS_PARAM_MAP_FORM_*) in the session.
+	3. Returns the string `error`.
 
 ## Exploring login() & bypassing authentication
 
-One of the thing we can conclude from `checkLogin()` is, if username, password and token is `not null`, then if the `login()` methods returns anything other than `error` as the string, then we will successfully authenticate with the application. So let's explore `login()` and see if there is a way in which we can force it to return any other string other than `error`.
+One of the things we can conclude from `checkLogin()` is, if username, password and token is `not null`, then the `login()` method returns anything other than `error` as the string, and will successfully authenticate with the application. So let's explore `login()` and see if there is a way in which we can force it to return any other string other than `error`.
 
 **File**: *ofbiz-framework-release18.12.05/framework/webapp/src/main/java/org/apache/ofbiz/webapp/control/LoginWorker.java*
 {% highlight java lineos %}
@@ -187,7 +187,7 @@ One of the thing we can conclude from `checkLogin()` is, if username, password a
 
 1. The method starts with retrieving the delegator, username, password, token, and a flag indicating whether the password is being reset (`forgotPwdFlag`) from request parameters.
 
-2. If the `forgotPwdFlag` is set to `true`, it attempts to decrypt the password using an EntityCrypto instance. If any of the parameters (username, password, or token) is missing from the request, it attempts to retrieve them from the session attributes.
+2. If the `forgotPwdFlag` is set to `true`, it attempts to decrypt the password using an `EntityCrypto` instance. If any of the parameters (username, password, or token) is missing from the request, it attempts to retrieve them from the session attributes.
 
 {% highlight java lineos %}
   426:         // allow a username and/or password in a request attribute to override the request parameter or the session attribute; this way a preprocessor can play with these a bit...
@@ -234,9 +234,9 @@ From the docs directory, inside the developer manual, we can see an architecture
 
 Reading further through the documentation, we can see something interesting:
 
-> The Java Servlet Container (tomcat) re-routes incoming requests through web.xml to a special OFBiz servlet called the control servlet. The control servlet for each OFBiz component is defined in controller.xml under the webapp folder. The main configuration for routing happens in controller.xml. The purpose of this file is to map requests to responses.
+> The Java Servlet Container (tomcat) re-routes incoming requests through web.xml to a special OFBiz servlet called the control servlet. The control servlet for each OFBiz component is defined in controller.xml under the webapp folder. The main configuration for routing happens in controller.xml. The purpose of this file is to map request endpoints to responses with flags for security related attributes.
 
-So essentially OFBiz uses Apache tomcat as it's core webserver which re-reoutes incoming requests through the `web.xml` to the control servlet. Each component's control server is defined in `controller.xml`, a central configuration file that defines request handlers, which are responsible for processing incoming requests. So in-order to fully understand how request mapping works, we need to look at 3 xml files, namely `ofbiz-component.xml`, `web.xml` and `controller.xml`. Let's take an example `/framework/webtools` to understand this:
+So essentially OFBiz uses Apache tomcat as it's core webserver which re-reoutes incoming requests through the `web.xml` to the control servlet. Each component's control server is defined in `controller.xml`, a central configuration file that defines request handlers, which are responsible for processing incoming requests. So, in-order to fully understand how request mapping works, we need to look at 3 xml files, namely `ofbiz-component.xml`, `web.xml` and `controller.xml`. Let's take an example `/framework/webtools` to understand this:
 
 ### ofbiz-component.xml
 
@@ -307,7 +307,7 @@ From the above file,
 * The `request-map` elements define mappings for specific URIs namely `ping` in this case.
 * The `security` element specifies security-related attributes. `auth=true` means authentication is mandatory for accessing the `/ping` endpoint.
 * The `event` element defines the event to be triggered when the specified URI is accessed.
-* The `response` element specifies the response to be returned.
+* The `response` element specifies the response to be rendered.
 
 So it's clear that in order to hit the `/ping` endpoint, we would need to be authenticated and hit the following API endpoint `/webtools/control/ping`. Firing up the browser and visiting [https://localhost:8443/webtools/control/ping](https://localhost:8443/webtools/control/ping){:target="_blank"} will redirect us to the login page. 
 
@@ -632,7 +632,7 @@ The program starts with checking if a parameter named `groovyProgram` exists, if
   101: }
 {%endhighlight%}
 
-A `groovyShell` is initialised and eventually the parameter `groovyProgram` is passed onto groovy shell, effectively getting our code executed. An interesting thing to note is the usage of `org.apache.ofbiz.security.SecuredUpload.isValidText(groovyProgram,["import"])`, which is essentially taking our parameter and along with a second argument namely string "import".
+A `groovyShell` is initialised and eventually the parameter `groovyProgram` is passed onto groovy shell, effectively getting our code executed. An interesting thing to note is the usage of `org.apache.ofbiz.security.SecuredUpload.isValidText(groovyProgram,["import"])`, which is essentially taking our parameter and along with a second argument which is an array containing the string "import".
 
 **File**: *ofbiz-framework-release18.12.05/framework/security/src/main/java/org/apache/ofbiz/security/SecuredUpload.java*
 {% highlight java lineos %}
@@ -657,7 +657,7 @@ isValidText() internally called `DENIEDWEBSHELLTOKENS.stream()` which is nothing
 deniedWebShellTokens=freemarker,import=\"java,runtime.getruntime().exec(,<%@ page,<script,<body>,<form,php,javascript,%eval,@eval,import os,passthru,exec,shell_exec,assert,str_rot13,system,phpinfo,base64_decode,chmod,mkdir,fopen,fclose,new file,import,upload,getfilename,download,getoutputstring,readfile
 {%endhighlight%}
 
-This seems like a simple blacklist based filtering, bypassing which will give us direct code execution. 
+This is a simple blacklist based filtering, bypassing which will give us direct code execution. 
 
 ## POC
 
